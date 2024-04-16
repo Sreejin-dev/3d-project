@@ -87,12 +87,15 @@ const ModelViewer = () => {
       const delta = event.deltaY;
       const zoomSpeed = 0.01;
 
+      // Adjust the camera position based on the delta and zoom speed
       cameraRef.current.position.z -= delta * zoomSpeed;
 
       // Optionally, you can limit the zoom range
-      // const minZoom = 5;
-      // const maxZoom = 20;
-      // cameraRef.current.position.z = Math.max(minZoom, Math.min(maxZoom, cameraRef.current.position.z));
+      const minZoom = 5; // Minimum zoom distance
+      const maxZoom = 20; // Maximum zoom distance
+
+      // Clamp the camera position within the zoom range
+      cameraRef.current.position.z = Math.max(minZoom, Math.min(maxZoom, cameraRef.current.position.z));
     };
 
     container.addEventListener("mousedown", handleMouseDown);
