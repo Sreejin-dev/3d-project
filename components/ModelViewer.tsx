@@ -41,7 +41,7 @@ const ModelViewer = () => {
       (gltf) => {
         modelRef.current = gltf.scene;
         modelRef.current.rotation.x = Math.PI / 5; // Initial rotation around the x-axis
-        modelRef.current.rotation.y = Math.PI / 3; // Initial rotation around the y-axis
+        modelRef.current.rotation.y = Math.PI / 4; // Initial rotation around the y-axis
         scene.add(modelRef.current);
       },
       undefined,
@@ -81,9 +81,24 @@ const ModelViewer = () => {
       isDraggingRef.current = false;
     };
 
+    const handleMouseWheel = (event: WheelEvent) => {
+      if (!cameraRef.current || !modelRef.current) return;
+
+      const delta = event.deltaY;
+      const zoomSpeed = 0.01;
+
+      cameraRef.current.position.z -= delta * zoomSpeed;
+
+      // Optionally, you can limit the zoom range
+      // const minZoom = 5;
+      // const maxZoom = 20;
+      // cameraRef.current.position.z = Math.max(minZoom, Math.min(maxZoom, cameraRef.current.position.z));
+    };
+
     container.addEventListener("mousedown", handleMouseDown);
     container.addEventListener("mousemove", handleMouseMove);
     container.addEventListener("mouseup", handleMouseUp);
+    container.addEventListener("wheel", handleMouseWheel);
 
     const animate = () => {
       requestAnimationFrame(animate);
@@ -96,6 +111,7 @@ const ModelViewer = () => {
       container.removeEventListener("mousedown", handleMouseDown);
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseup", handleMouseUp);
+      container.removeEventListener("wheel", handleMouseWheel);
 
       if (containerRef.current) {
         containerRef.current.removeChild(renderer.domElement);
